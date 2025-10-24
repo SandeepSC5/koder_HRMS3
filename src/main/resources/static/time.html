@@ -2,9 +2,11 @@
 <html>
 <head>
   <title>Timesheet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+  
   <style>
     body {
-      font-family: Limelight, sans-serif;
+      font-family: 'Open Sans', sans-serif;
       background-color: rgb(249, 217, 134);
       padding: 20px;
       background-image: url('/images/base.jpeg');
@@ -43,9 +45,9 @@
 </head>
 <body>
 
-  <h1 style="text-align:center;">TimeSheet</h1>
+  <h1 style="text-align:center;font-family:'BBH Sans Hegarty';color:white">TimeSheet</h1>
 
-  <form id ="userForm" method="POST" action="/checkin">
+  <form id ="userForm" method="POST" action="/checkin" onsubmit="return handleLogin(event)">
     <table>
       <tr>
         <td>Name:</td>
@@ -53,7 +55,7 @@
       </tr>
       <tr>
         <td>Employee ID:</td>
-        <td><input type="text" name="empId" required></td>
+        <td><input type="number" name="employeeid" required></td>
       </tr>
      <tr>
   <td>Date:</td>
@@ -66,7 +68,7 @@
   window.onload = function() {
     const today = new Date();
     const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0 index based
     const dd = String(today.getDate()).padStart(2, '0');
     const formattedDate = `${yyyy}-${mm}-${dd}`;
     document.getElementById('dateField').value = formattedDate;
@@ -98,11 +100,14 @@
       </tr>
       <tr><td style="color:red;">Note : Its 24hr Format be careful ! <br>Remember Check-in Time for current day</td></tr>
     </table>
+
   </form>
+
+
   <table>
    <tr>
         <td colspan="2" style="text-align:center;">
-          <input name="submit" type="submit" value="Apply for Leave !">
+          <a href="leaves.html">Apply for Leave !</a>
         </td>
       </tr>
     </table>

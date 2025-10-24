@@ -7,7 +7,10 @@
  .img1{background-image:url('/images/team.jpeg');background-size:cover;width:80%;height:500px;margin:auto; background-origin:content-box;background-attachment:fixed;}
  .div1{width:0px;height:0px;margin-left:11%;margin-top:0px;border-radius:0px;font-family:Broadway; color:grey;font-size:40px}
  .icons{font-size:80px;}
+
+ 
  td{font-family:Limelight;color: 	 #006666;text-decoration:none;}
  .dropdown{display:none;position:absolute;z-index:1}
   a:link{text-decoration:none;}
  a:hover{color : red;}
+ 

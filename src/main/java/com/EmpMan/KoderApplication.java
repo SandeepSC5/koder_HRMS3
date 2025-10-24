@@ -1,4 +1,4 @@
-package com.EmpMan.Koder;
+package com.EmpMan;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

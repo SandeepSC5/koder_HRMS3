@@ -2,26 +2,30 @@
 <html>
 <head>
   <title>Employee Monthly Salary</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial, sans-serif; margin: 30px;background-image: url('images/base.jpeg'); }
+    body { font-family: 'Open Sans', sans-serif; margin: 30px; background-image: url('images/base.jpeg'); }
     label { margin-right: 10px; }
     button { margin-left: 10px; padding: 5px 10px; cursor: pointer; }
-    table { width: 80%; border-collapse: collapse; margin-top: 20px; }
+    table { width: 80%; border-collapse: collapse; margin-top: 20px; background: #f0f0f0; }
     th, td { border: 1px solid gray; padding: 8px; text-align: left; }
     th { background: #f0f0f0; }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
-<h2>Employee Salary Report</h2>
+<h2 style="color: white;font-family:'BBH Sans Hegarty'">Employee Salary Report</h2>
 
-<label>Start Date:</label>
-<input type="date" id="startDate">
+<label style="color: white;">Start Date:</label>
+<input type="date" id="startDate" style="color: white; background-color: #555;">
 
-<label>End Date:</label>
-<input type="date" id="endDate">
+<label style="color: white;">End Date:</label>
+<input type="date" id="endDate" style="color: white; background-color: #555;">
+
 
 <button onclick="fetchData()">Get Salary</button>
+<button onclick="downloadExcel()">Download Excel</button>
 
 <table id="resultTable" style="display:none;">
   <thead>
@@ -38,18 +42,6 @@
 <script>
 const HOURLY_RATE = 100; // ₹100 per hour
 
-function parseHours(str) {
-    // str = "08:30" => 8.5 hours
-    const parts = str.split(':');
-    return parseInt(parts[0], 10) + (parseInt(parts[1], 10) / 60);
-}
-
-function formatHours(hours) {
-    const h = Math.floor(hours);
-    const m = Math.round((hours - h) * 60);
-    return `${h}:${m.toString().padStart(2,'0')}`;
-}
-
 function fetchData() {
     const start = document.getElementById('startDate').value;
     const end = document.getElementById('endDate').value;
@@ -59,7 +51,7 @@ function fetchData() {
         return;
     }
 
-    fetch(`/admin1?startDate=${start}&endDate=${end}`)
+    fetch(`http://localhost:8080/admin1?startDate=${start}&endDate=${end}`)
       .then(response => response.json())
       .then(data => {
           const table = document.getElementById('resultTable');
@@ -71,30 +63,30 @@ function fetchData() {
 
           data.forEach(row => {
               const key = row.employeeid;
-              const hours = parseHours(row.totalHr); //changed (row.total_hr)
+              const hours = parseFloat(row.totalHr);
               if (!employeeMap[key]) {
                   employeeMap[key] = {
                       name: row.name,
                       employeeid: row.employeeid,
-                      totalHr: 0 //changed
+                      totalHr: 0 
                   };
               }
-              employeeMap[key].totalHr += hours;//changed totalHours
+              employeeMap[key].totalHr += hours;
           });
 
           // Calculate salary and populate table
           Object.values(employeeMap).forEach(emp => {
-              const gross = emp.totalHr * HOURLY_RATE; //changed
+              const gross = emp.totalHr * HOURLY_RATE; 
               const pf = 0.12 * gross;
               const pt = 200;
               const tds = 0.05 * gross;
               const net = gross - (pf + pt + tds);
-
+              const formattedHours = emp.totalHr.toFixed(2);
               const tr = document.createElement('tr');
               tr.innerHTML = `
                   <td>${emp.name}</td>
                   <td>${emp.employeeid}</td>
-                  <td>${formatHours(emp.totalHr)}</td> //changed (emp.totalHours)}
+                  <td>${formattedHours}</td> 
                   <td>${net.toFixed(2)}</td>
               `;
               tbody.appendChild(tr);
@@ -106,6 +98,17 @@ function fetchData() {
          alert("Error fetching data, check backend console");
          console.error(err);
       });
+}
+
+function downloadExcel() {
+    const table = document.getElementById('resultTable');
+    if (table.style.display === "none") {
+        alert("No data to export. Please fetch salary data first.");
+        return;
+    }
+
+    const wb = XLSX.utils.table_to_book(table, { sheet: "Salary Report" });
+    XLSX.writeFile(wb, "Employee_Salary_Report.xlsx");
 }
 </script>
 

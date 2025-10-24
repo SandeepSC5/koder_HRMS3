@@ -1,16 +1,15 @@
-package com.EmpMan.Koder;
+package com.EmpMan.Controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-
 public class homeController {
 	@GetMapping("/")
 	public String home()
 	{
 		// TODO Auto-generated method stub
-        return "index";
+        return "index.html";
 	}
 	
 	@GetMapping("/time")
@@ -24,5 +23,4 @@ public class homeController {
 //	{
 //		return "salary";
 //	}
-
 }
