@@ -28,9 +28,13 @@ public class EmployeeCheckinService{
 		else if(i<1) checkin.setStatus('A');
 		else checkin.setStatus('P');
         LocalDate t=LocalDate.now();
-        //You cant fill the Timesheet for Past
-        if(checkin.getDate().isBefore(t))
-        {throw new Unexpected_hr("Can't fill out the Past!");}
+        //Allow to fill it once only
+        if(repository.existsByEmployeeidAndDate(checkin.getEmployeeid(), checkin.getDate()))
+         {throw new Unexpected_hr("already exists on todays date");}
+
+         //You cant fill the Timesheet for Past
+        else if(checkin.getDate().isBefore(t))
+             {throw new Unexpected_hr("Can't fill out the Past!");}
         else {
             //total hours should not be more than 9 hr or less than 0
             if (i > 9) throw new Unexpected_hr("Time Should not be greater than 9 Hr");
